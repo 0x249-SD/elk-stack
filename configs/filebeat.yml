@@ -1,0 +1,30 @@
+filebeat.inputs:
+- type: filestream
+  id: cassandra-logs-filestream
+  paths:
+  - ingest_data/*.log
+
+filebeat.autodiscover:
+  providers:
+  - type: docker
+    hints.enabled: true
+
+processors:
+- add_docker_metadata: ~
+
+setup.kibana:
+  host: ${KIBANA_HOSTS}
+  username: ${ELASTIC_USER}
+  password: ${ELASTIC_PASSWORD}
+
+output.elasticsearch:
+  hosts: ${ELASTIC_HOSTS}
+  username: ${ELASTIC_USER}
+  password: ${ELASTIC_PASSWORD}
+  ssl.enabled: true
+  ssl.certificate_authorities: "certs/ca/ca.crt"
+  index: "access-portal-logs-%{+yyyy.MM.dd}"
+
+setup.template.name: "access-portal"
+setup.template.pattern: "access-portal-*"
+setup.template.enabled: true

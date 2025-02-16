@@ -1,0 +1,4 @@
+.env
+volumes
+__pycache__
+*.sh
